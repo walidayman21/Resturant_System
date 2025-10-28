@@ -1,0 +1,336 @@
+﻿@* @model Order
+@{
+    ViewData["Title"] = "Checkout";
+    var activeItems = Model.OrderItems.Where(oi => !oi.IsDeleted).ToList();
+}
+
+<style>
+    .checkout-container {
+        max-width: 900px;
+        margin: 40px auto;
+    }
+</style>
+
+<div class="container checkout-container">
+    <h2 class="text-center mb-4">📝 Complete Your Order</h2>
+
+    <div class="row">
+        <!-- Order Form -->
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-4">👤 Customer Information</h4> *@
+
+                    @* <form asp-action="ConfirmOrder" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="orderId" value="@Model.Id" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="customerName" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" name="customerPhone" class="form-control"
+                                   placeholder="01XXXXXXXXX" pattern="[0-9]{11}" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address (Optional)</label>
+                            <textarea name="address" class="form-control" rows="2"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Order Notes (Optional)</label>
+                            <textarea name="orderNotes" class="form-control" rows="2"
+                                      placeholder="Any special requests?"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger btn-lg w-100 mt-3">
+                            🛒 Confirm Order
+                        </button>
+                    </form> *@
+
+@*                     <form asp-action="ConfirmOrder" method="post" id="checkoutForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="orderId" value="@Model.Id" />
+
+                        <!-- Order Type -->
+                        <div class="mb-3">
+                            <label class="form-label">Order Type *</label>
+                            <select name="orderType" id="orderType" class="form-select" required>
+                                <option value="">-- Select Order Type --</option>
+                                @foreach (var item in ViewBag.OrderTypes)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Table Number (for Dine-In) -->
+                        <div class="mb-3" id="tableNumberSection" style="display:none;">
+                            <label class="form-label">Table Number</label>
+                            <input type="number" name="tableNumber" class="form-control"
+                                   min="1" max="100" placeholder="Enter table number" />
+                        </div>
+
+                        <!-- Delivery Address (for Delivery) -->
+                        <div class="mb-3" id="deliveryAddressSection" style="display:none;">
+                            <label class="form-label">Delivery Address *</label>
+                            <textarea name="deliveryAddress" class="form-control" rows="3"
+                                      placeholder="Enter your full delivery address"></textarea>
+                            <small class="text-muted">Delivery Fee: 30 EGP</small>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method *</label>
+                            <select name="paymentMethod" class="form-select" required>
+                                <option value="">-- Select Payment Method --</option>
+                                @foreach (var item in ViewBag.PaymentMethods)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Order Notes -->
+                        <div class="mb-3">
+                            <label class="form-label">Order Notes (Optional)</label>
+                            <textarea name="orderNotes" class="form-control" rows="2"
+                                      placeholder="Any special requests?"></textarea>
+                        </div>
+
+                        <!-- Customer Info (Read-only) -->
+                        <div class="alert alert-info">
+                            <h6>👤 Customer Information:</h6>
+                            <p class="mb-0"><strong>Name:</strong> @Model.Customer.Name</p>
+                            <p class="mb-0"><strong>Phone:</strong> @Model.Customer.PhoneNumber</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger btn-lg w-100 mt-3">
+                            🛒 Confirm Order
+                        </button>
+                    </form>
+                    </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">📋 Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Items List -->
+                    @foreach (var item in activeItems)
+                    {
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>@item.MenuItem.Name x @item.Quantity</span>
+                            <strong>@item.Subtotal.ToString("C")</strong>
+                        </div>
+                    }
+
+                    <hr />
+
+                    <!-- Totals -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <strong>@Model.Subtotal.ToString("C")</strong>
+                    </div>
+                    @if (Model.Discounts > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 text-success">
+                            <span>Discount:</span>
+                            <strong>- @Model.Discounts.ToString("C")</strong>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-between mb-2 text-muted">
+                        <span>Tax (8.5%):</span>
+                        <span>@Model.Tax.ToString("C")</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <h5>Total:</h5>
+                        <h5 class="text-danger">@Model.TotalAmount.ToString("C")</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        // Show/Hide sections based on order type
+        document.getElementById('orderType').addEventListener('change', function() {
+            const orderType = parseInt(this.value);
+            const tableSection = document.getElementById('tableNumberSection');
+            const deliverySection = document.getElementById('deliveryAddressSection');
+
+            // Hide all first
+            tableSection.style.display = 'none';
+            deliverySection.style.display = 'none';
+
+            // Show based on selection
+            // 0 = DineIn, 1 = Takeaway, 2 = Delivery
+            if (orderType === 0) {
+                tableSection.style.display = 'block';
+            } else if (orderType === 2) {
+                deliverySection.style.display = 'block';
+            }
+        });
+    </script> *@
+
+
+@model Order
+@{
+    ViewData["Title"] = "Checkout";
+    var activeItems = Model.OrderItems.Where(oi => !oi.IsDeleted).ToList();
+}
+
+<style>
+    .checkout-container {
+        max-width: 900px;
+        margin: 40px auto;
+    }
+</style>
+
+<div class="container checkout-container">
+    <h2 class="text-center mb-4">📝 Complete Your Order</h2>
+
+    <div class="row">
+        <!-- Order Form -->
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="mb-4">👤 Customer Information</h4>
+
+                    <form asp-action="ConfirmOrder" method="post" id="checkoutForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="orderId" value="@Model.Id" />
+
+                        <!-- Order Type -->
+                        <div class="mb-3">
+                            <label class="form-label">Order Type *</label>
+                            <select name="orderType" id="orderType" class="form-select" required>
+                                <option value="">-- Select Order Type --</option>
+                                @foreach (var item in ViewBag.OrderTypes)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Table Number (for Dine-In) -->
+                        <div class="mb-3" id="tableNumberSection" style="display:none;">
+                            <label class="form-label">Table Number</label>
+                            <input type="number" name="tableNumber" class="form-control"
+                                   min="1" max="100" placeholder="Enter table number" />
+                        </div>
+
+                        <!-- Delivery Address (for Delivery) -->
+                        <div class="mb-3" id="deliveryAddressSection" style="display:none;">
+                            <label class="form-label">Delivery Address *</label>
+                            <textarea name="deliveryAddress" class="form-control" rows="3"
+                                      placeholder="Enter your full delivery address" required></textarea>
+                            <small class="text-muted">Delivery Fee: 30 EGP</small>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method *</label>
+                            <select name="paymentMethod" class="form-select" required>
+                                <option value="">-- Select Payment Method --</option>
+                                @foreach (var item in ViewBag.PaymentMethods)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Order Notes -->
+                        <div class="mb-3">
+                            <label class="form-label">Order Notes (Optional)</label>
+                            <textarea name="orderNotes" class="form-control" rows="2"
+                                      placeholder="Any special requests?"></textarea>
+                        </div>
+
+                        <!-- Customer Info (Read-only) -->
+                        <div class="alert alert-info">
+                            <h6>👤 Customer Information:</h6>
+                            <p class="mb-0"><strong>Name:</strong> @Model.Customer.Name</p>
+                            <p class="mb-0"><strong>Phone:</strong> @Model.Customer.PhoneNumber</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-danger btn-lg w-100 mt-3">
+                            🛒 Confirm Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">📋 Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Items List -->
+                    @foreach (var item in activeItems)
+                    {
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>@item.MenuItem.Name x @item.Quantity</span>
+                            <strong>@item.Subtotal.ToString("C")</strong>
+                        </div>
+                    }
+
+                    <hr />
+
+                    <!-- Totals -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <strong>@Model.Subtotal.ToString("C")</strong>
+                    </div>
+                    @if (Model.Discounts > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 text-success">
+                            <span>Discount:</span>
+                            <strong>- @Model.Discounts.ToString("C")</strong>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-between mb-2 text-muted">
+                        <span>Tax (8.5%):</span>
+                        <span>@Model.Tax.ToString("C")</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <h5>Total:</h5>
+                        <h5 class="text-danger">@Model.TotalAmount.ToString("C")</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('orderType').addEventListener('change', function () {
+        const orderType = parseInt(this.value);
+        const tableSection = document.getElementById('tableNumberSection');
+        const deliverySection = document.getElementById('deliveryAddressSection');
+
+        tableSection.style.display = 'none';
+        deliverySection.style.display = 'none';
+
+        // 1 = DineIn, 2 = Takeout, 3 = Delivery
+        if (orderType === 1) {
+            tableSection.style.display = 'block';
+        } else if (orderType === 3) {
+            deliverySection.style.display = 'block';
+        }
+    });
+</script>

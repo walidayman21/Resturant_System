@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Order>
+
+@{
+    ViewData["Title"] = "GetAll";
+}
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h1>GetAll</h1>
+
+@foreach (var order in Model)
+{
+    <div class="border rounded p-3 mb-4 shadow-sm">
+        <h4>Order #@order.Id</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Customer)</dt>
+            <dd class="col-sm-10">@order.Customer?.Name</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Notes)</dt>
+            <dd class="col-sm-10">@order.Notes</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.PlacingOrder)</dt>
+            <dd class="col-sm-10">@order.PlacingOrder</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.OrderStatus)</dt>
+            <dd class="col-sm-10">@order.OrderStatus</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.PreparationTimeMinutes)</dt>
+            <dd class="col-sm-10">@order.PreparationTimeMinutes</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Subtotal)</dt>
+            <dd class="col-sm-10">@order.Subtotal</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Tax)</dt>
+            <dd class="col-sm-10">@order.Tax</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.Discounts)</dt>
+            <dd class="col-sm-10">@order.Discounts</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.DeliveryFee)</dt>
+            <dd class="col-sm-10">@order.DeliveryFee</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.TotalAmount)</dt>
+            <dd class="col-sm-10">@order.TotalAmount</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.TableNumber)</dt>
+            <dd class="col-sm-10">@order.TableNumber</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.DeliveryAddress)</dt>
+            <dd class="col-sm-10">@order.DeliveryAddress</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.DeliveryTime)</dt>
+            <dd class="col-sm-10">@order.DeliveryTime</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.CreatedAt)</dt>
+            <dd class="col-sm-10">@order.CreatedAt</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.UpdatedAt)</dt>
+            <dd class="col-sm-10">@order.UpdatedAt</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(m => m.IsDeleted)</dt>
+            <dd class="col-sm-10">@order.IsDeleted</dd>
+        </dl>
+
+        <div>
+            <a asp-action="GetById" asp-route-id="@order.Id" class="btn btn-info btn-sm">Details</a>
+        </div>
+    </div>
+}

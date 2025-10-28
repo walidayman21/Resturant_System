@@ -1,0 +1,330 @@
+﻿
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden">
+    <div class="hero-bg"></div>
+    <div class="container">
+        <div class="row min-vh-100 align-items-center">
+            <div class="col-lg-6 text-white">
+                <h1 class="display-3 fw-bold mb-4 animate-slide-up">
+                    Welcome to Our Restaurant
+                </h1>
+                <p class="lead mb-4 animate-slide-up" style="animation-delay: 0.2s;">
+                    Experience the finest dining with delicious food, great ambiance, and exceptional service.
+                </p>
+                <div class="d-flex gap-3 flex-wrap animate-slide-up" style="animation-delay: 0.4s;">
+                    <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-success btn-lg px-5 py-3">
+                        <i class="bi bi-grid-3x3-gap me-2"></i>Browse Menu
+                    </a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg px-5 py-3">
+                        <i class="bi bi-person-plus me-2"></i>Sign Up
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="auth-card animate-fade-in">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body p-4">
+                            <h4 class="text-center mb-4 fw-bold">
+                                <i class="bi bi-box-arrow-in-right text-success me-2"></i>Quick Access
+                            </h4>
+
+                            <div class="d-grid gap-3">
+                                <a asp-controller="Account" asp-action="Login" class="btn btn-success btn-lg">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                                </a>
+
+                                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-success btn-lg">
+                                    <i class="bi bi-person-plus me-2"></i>Register
+                                </a>
+
+                                 <div class="text-center my-2">
+                                    <span class="text-muted">or</span>
+                                </div> 
+
+                                 <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-light btn-lg border">
+                                    <i class="bi bi-eye me-2"></i>Browse as Guest
+                                </a> 
+                            </div>
+
+                            <div class="mt-4 text-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Login to enjoy exclusive benefits and track your orders
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">Why Choose Us</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                    <div class="card-body">
+                        <div class="feature-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-lightning-charge-fill text-success" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Fast Delivery</h5>
+                        <p class="text-muted">Get your favorite meals delivered hot and fresh to your doorstep in no time.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                    <div class="card-body">
+                        <div class="feature-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-star-fill text-success" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">Quality Food</h5>
+                        <p class="text-muted">We use only the finest ingredients to prepare delicious and healthy meals.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
+                    <div class="card-body">
+                        <div class="feature-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-headset text-success" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">24/7 Support</h5>
+                        <p class="text-muted">Our customer service team is always ready to help you with any questions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Items Preview -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Popular Dishes</h2>
+            <p class="text-muted">Discover our customer favorites</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-img-top bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-egg-fried text-success" style="font-size: 4rem;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="fw-bold">Breakfast Specials</h5>
+                        <p class="text-muted">Start your day with our delicious breakfast options</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success fw-bold">From $5.99</span>
+                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-success">View Menu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-img-top bg-warning bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-cup-hot text-warning" style="font-size: 4rem;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="fw-bold">Hot Beverages</h5>
+                        <p class="text-muted">Enjoy our selection of coffee, tea, and more</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success fw-bold">From $2.99</span>
+                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-success">View Menu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-img-top bg-danger bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-fire text-danger" style="font-size: 4rem;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="fw-bold">Main Courses</h5>
+                        <p class="text-muted">Savor our signature dishes and chef specials</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success fw-bold">From $12.99</span>
+                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-success">View Menu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action for Mobile -->
+<section class="py-5 bg-success text-white d-lg-none">
+    <div class="container text-center">
+        <h3 class="fw-bold mb-4">Get Started Today!</h3>
+        <div class="d-grid gap-3">
+            <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+            </a>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-person-plus me-2"></i>Register
+            </a>
+            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-dark btn-lg">
+                <i class="bi bi-eye me-2"></i>Browse as Guest
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero-section {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+
+    /* .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #198754 0%, #146c43 100%);
+        z-index: -1;
+    } */
+
+
+    .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: brightness(0.5);
+        transition: background 1s ease-in-out;
+        z-index: -1;
+    }
+
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+    @@keyframes slideUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.8s ease-out forwards;
+        opacity: 0;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 1s ease-out forwards;
+        animation-delay: 0.6s;
+        opacity: 0;
+    }
+
+    .auth-card .card {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+    }
+
+    .hover-lift {
+        transition: all 0.3s ease;
+    }
+
+        .hover-lift:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+        }
+
+    .feature-icon {
+        transition: all 0.3s ease;
+    }
+
+    .hover-lift:hover .feature-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+        }
+
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+</style>
+<script>
+    const images = [
+        '/images/website/res1.jpg',
+        '/images/website/res2.jpg',
+        '/images/website/res3.jpg',
+        '/images/website/res10.jpg'
+    ];
+
+    let current = 0;
+    const heroBg = document.querySelector('.hero-bg');
+
+    heroBg.style.backgroundImage = `url('${images[current]}')`;
+
+    setInterval(() => {
+        current = (current + 1) % images.length;
+        heroBg.style.backgroundImage = `url('${images[current]}')`;
+    }, 3000); 
+</script>

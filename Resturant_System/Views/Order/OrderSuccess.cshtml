@@ -1,0 +1,36 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Order Success";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+                    <h1 class="mt-3">Order Confirmed! 🎉</h1>
+                    <p class="lead">Thank you for your order!</p>
+
+                    <div class="alert alert-success mt-4">
+                        <h4>Order #@Model.Id</h4>
+                        <h5 class="text-danger">Total: @Model.TotalAmount.ToString("C")</h5>
+                    </div>
+
+                    <div class="text-start mt-4">
+                        <h5>📋 Order Details:</h5>
+                        <ul class="list-unstyled">
+                            <li>👤 Customer: @Model.Customer.Name</li>
+                            <li>📞 Phone: @Model.Customer.PhoneNumber</li>
+                            <li>📊 Status: <span class="badge bg-warning">@Model.OrderStatus</span></li>
+                        </ul>
+                    </div>
+
+                    <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-primary btn-lg mt-3">
+                        🍽️ Order More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

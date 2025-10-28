@@ -1,0 +1,496 @@
+﻿@* @model IEnumerable<MenuItem>
+
+@{
+    ViewData["Title"] = "Menu";
+}
+
+<h1>Menu</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImgUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAvailable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsSpicy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsHealthy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImgUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsAvailable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsSpicy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsHealthy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                <button>Quantity</button>
+                <a asp-action="Edit" asp-route-id="@item.Id">Order</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@
+
+@model IEnumerable<MenuItem>
+@{
+    ViewData["Title"] = "Menu";
+}
+
+@{
+    Layout = "_CustomerLayout";
+}
+
+<style>
+    :root {
+        --primary: #e74c3c;
+        --secondary: #f39c12;
+        --dark: #2c3e50;
+        --light: #ecf0f1;
+        --success: #27ae60;
+    }
+
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .hero-banner {
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1600') center/cover;
+        color: white;
+        padding: 100px 0;
+        margin-bottom: 50px;
+        text-align: center;
+    }
+
+        .hero-banner h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .hero-banner p {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+        }
+
+    .filter-section {
+        margin-bottom: 40px;
+    }
+
+    .filter-btn {
+        margin: 5px;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .menu-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        height: 100%;
+    }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+    .card-img-top {
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .badge-overlay {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 10;
+    }
+
+    .badge {
+        margin-right: 5px;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    .price-tag {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: var(--primary);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        z-index: 10;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 10px;
+    }
+
+    .category-badge {
+        display: inline-block;
+        background: var(--light);
+        color: var(--dark);
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .card-text {
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .quantity-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        border: 2px solid #ddd;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+
+    .qty-btn {
+        background: #f8f9fa;
+        border: none;
+        padding: 8px 18px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .qty-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+    .qty-display {
+        padding: 8px 20px;
+        font-weight: bold;
+        min-width: 50px;
+        text-align: center;
+    }
+
+    .order-btn {
+        border-radius: 30px;
+        padding: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-order {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        border: none;
+        color: white;
+    }
+
+        .btn-order:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+        }
+
+    .unavailable-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        z-index: 5;
+    }
+
+</style>
+
+<!-- Hero Section -->
+<div class="hero-banner">
+    <div class="container">
+        <h1>🍽️ Our Menu</h1>
+        <p>Discover Delicious Dishes Made With Love</p>
+    </div>
+</div>
+
+<div class="top-actions">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-success flex-fill">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+</div>
+
+<!-- Main Content -->
+<div class="container mb-5">
+
+    <!-- Filter Section -->
+    <div class="filter-section text-center">
+        <h3 class="mb-4">Filter By</h3>
+        <div>
+            <button class="btn btn-outline-primary filter-btn active" data-filter="all">
+                All Items
+            </button>
+            <button class="btn btn-outline-danger filter-btn" data-filter="spicy">
+                🌶️ Spicy
+            </button>
+            <button class="btn btn-outline-success filter-btn" data-filter="healthy">
+                🥗 Healthy
+            </button>
+            <button class="btn btn-outline-info filter-btn" data-filter="available">
+                ✅ Available Only
+            </button>
+        </div>
+    </div>
+
+    <!-- Menu Grid -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="row g-4" id="menuGrid">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-md-6 menu-item"
+                     data-spicy="@item.IsSpicy.ToString().ToLower()"
+                     data-healthy="@item.IsHealthy.ToString().ToLower()"
+                     data-available="@item.IsAvailable.ToString().ToLower()">
+
+                    <div class="card menu-card">
+                        <!-- Image Section -->
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(item.ImgUrl))
+                            {
+                                <img src="@item.ImgUrl" class="card-img-top" alt="@item.Name">
+                            }
+                            else
+                            {
+                                <img src="https://via.placeholder.com/400x250/e74c3c/ffffff?text=@item.Name"
+                                     class="card-img-top" alt="@item.Name">
+                            }
+
+                            <!-- Badges -->
+                            <div class="badge-overlay">
+                                @if (item.IsSpicy)
+                                {
+                                    <span class="badge bg-danger">🌶️ Spicy</span>
+                                }
+                                @if (item.IsHealthy)
+                                {
+                                    <span class="badge bg-success">🥗 Healthy</span>
+                                }
+                            </div>
+
+                            <!-- Price Tag -->
+                            <div class="price-tag">
+                                $@item.Price.ToString("F2")
+                            </div>
+
+                            <!-- Unavailable Overlay -->
+                            @if (!item.IsAvailable)
+                            {
+                                <div class="unavailable-overlay">
+                                    ❌ Unavailable
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Name</h5>
+
+                            <span class="category-badge">
+                                📂 @(item.Category?.Name ?? "Uncategorized")
+                            </span>
+
+                            <p class="card-text">
+                                @if (!string.IsNullOrEmpty(item.Description))
+                                {
+                                    @item.Description
+                                }
+                                else
+                                {
+                                    <text>Delicious dish prepared with fresh ingredients and served with love.</text>
+                                }
+                            </p>
+
+                            <!-- Quantity Control -->
+                            <div class="quantity-section">
+                                <div class="quantity-control">
+                                    <button class="qty-btn" onclick="changeQuantity(this, -1)">-</button>
+                                    <span class="qty-display">1</span>
+                                    <button class="qty-btn" onclick="changeQuantity(this, 1)">+</button>
+                                </div>
+
+                                @if (item.IsAvailable)
+                                {
+                                    <a asp-controller="Order" asp-action="AddToCart" asp-route-id="@item.Id" asp-route-quantity="1"
+                                       class="btn btn-order order-btn flex-fill order-link">
+                                        🛒 Add to cart
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary order-btn flex-fill" disabled>
+                                        ❌ Unavailable
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center" role="alert">
+            <h4>🍽️ No menu items available</h4>
+            <p>Please check back later for our delicious offerings!</p>
+        </div>
+    }
+</div>
+
+<script>
+    // Quantity Control
+    function changeQuantity(btn, change) {
+        const qtyDisplay = btn.parentElement.querySelector('.qty-display');
+        let currentQty = parseInt(qtyDisplay.textContent);
+        let newQty = currentQty + change;
+
+        if (newQty >= 1 && newQty <= 50) {
+            qtyDisplay.textContent = newQty;
+
+            // Update order link
+            const card = btn.closest('.card-body');
+            const orderLink = card.querySelector('.order-link');
+            if (orderLink) {
+                const url = new URL(orderLink.href);
+                url.searchParams.set('quantity', newQty);
+                orderLink.href = url.toString();
+            }
+        }
+    }
+
+    // Filter Functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = this.dataset.filter;
+            const menuItems = document.querySelectorAll('.menu-item');
+
+            menuItems.forEach(item => {
+                const spicy = item.dataset.spicy === 'true';
+                const healthy = item.dataset.healthy === 'true';
+                const available = item.dataset.available === 'true';
+
+                let show = false;
+
+                if (filter === 'all') {
+                    show = true;
+                } else if (filter === 'spicy') {
+                    show = spicy;
+                } else if (filter === 'healthy') {
+                    show = healthy;
+                } else if (filter === 'available') {
+                    show = available;
+                }
+
+                if (show) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    }, 10);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+
+    // Add smooth transitions
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.style.transition = 'opacity 0.3s, transform 0.3s';
+    });
+</script>

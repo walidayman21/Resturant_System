@@ -1,0 +1,190 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Your Cart";
+    var activeItems = Model.OrderItems?.Where(oi => !oi.IsDeleted).ToList() ?? new List<OrderItem>();
+}
+
+<style>
+    .cart-container {
+        max-width: 1000px;
+        margin: 40px auto;
+    }
+
+    .cart-header {
+        background: linear-gradient(135deg, #e74c3c, #f39c12);
+        color: white;
+        padding: 30px;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
+    }
+
+    .cart-item {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quantity-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        border: 2px solid #e74c3c;
+        background: white;
+        color: #e74c3c;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .quantity-btn:hover {
+            background: #e74c3c;
+            color: white;
+        }
+</style>
+
+<div class="container cart-container">
+    <!-- Header -->
+    <div class="cart-header">
+        <h1>🛒 Your Shopping Cart</h1>
+        <p class="mb-0">@activeItems.Count item(s) in cart</p>
+    </div>
+
+    @if (activeItems.Any())
+    {
+        <!-- Cart Items -->
+        <div class="p-4" style="background: #f8f9fa;">
+            @foreach (var item in activeItems)
+            {
+                <div class="cart-item">
+                    <div class="row align-items-center">
+                        <!-- Image -->
+                        <div class="col-md-2">
+                            @if (!string.IsNullOrEmpty(item.MenuItem.ImgUrl))
+                            {
+                                <img src="@item.MenuItem.ImgUrl" class="img-fluid rounded" alt="@item.MenuItem.Name" />
+                            }
+                            else
+                            {
+                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded" style="height: 80px;">
+                                    <i class="bi bi-image" style="font-size: 2rem;"></i>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Item Info -->
+                        <div class="col-md-4">
+                            <h5 class="mb-1">@item.MenuItem.Name</h5>
+                            <p class="text-muted mb-0">@item.UnitPrice.ToString("C") each</p>
+                        </div>
+
+                        <!-- Quantity Control -->
+                        <div class="col-md-3">
+                            <form asp-action="UpdateQuantity" method="post" class="quantity-control">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="orderItemId" value="@item.Id" />
+                                <button type="submit" name="quantity" value="@(item.Quantity - 1)" class="quantity-btn">-</button>
+                                <span class="fw-bold fs-5">@item.Quantity</span>
+                                <button type="submit" name="quantity" value="@(item.Quantity + 1)" class="quantity-btn">+</button>
+                            </form>
+                        </div>
+
+                        <!-- Total & Remove -->
+                        <div class="col-md-2 text-end">
+                            <h5 class="text-danger mb-2">@item.Subtotal.ToString("C")</h5>
+                            <form asp-action="RemoveItem" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="orderItemId" value="@item.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    @* <!-- Notes -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <form asp-action="UpdateNotes" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="orderItemId" value="@item.Id" />
+                                <div class="input-group">
+                                    <input type="text" name="notes" class="form-control"
+                                           placeholder="Add special notes (e.g., no onions)"
+                                           value="@item.Notes" />
+                                    <button type="submit" class="btn btn-outline-secondary">
+                                        <i class="bi bi-pencil"></i> Update
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div> *@
+                </div>
+            }
+
+            <!-- Cart Summary -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="mb-3">📊 Cart Summary</h4>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <strong>@Model.Subtotal.ToString("C")</strong>
+                    </div>
+                    @if (Model.Discounts > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 text-success">
+                            <span>Discount:</span>
+                            <strong>- @Model.Discounts.ToString("C")</strong>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-between mb-2 text-muted">
+                        <span>Tax (8.5%):</span>
+                        <span>@Model.Tax.ToString("C")</span>
+                    </div>
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <h5>Total:</h5>
+                        <h5 class="text-danger">@Model.TotalAmount.ToString("C")</h5>
+                    </div>
+
+                    <!-- Discount Info -->
+                    <div class="alert alert-info mt-3 mb-0">
+                        <small>
+                            <i class="bi bi-info-circle"></i>
+                            Happy Hour (3-5 PM): 20% OFF |
+                            Orders over 100 EGP: 10% OFF
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2 justify-content-between mt-4">
+                <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Continue Shopping
+                </a>
+                <a asp-action="Checkout" class="btn btn-danger btn-lg">
+                    Proceed to Checkout <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Empty Cart -->
+        <div class="text-center py-5" style="background: #f8f9fa;">
+            <i class="bi bi-cart-x" style="font-size: 5rem; color: #ccc;"></i>
+            <h3 class="mt-3">Your cart is empty!</h3>
+            <p class="text-muted">Add some delicious items to get started.</p>
+            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-primary btn-lg mt-3">
+                <i class="bi bi-shop"></i> Browse Menu
+            </a>
+        </div>
+    }
+</div>

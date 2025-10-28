@@ -1,0 +1,151 @@
+﻿@using Resturant_System.ViewModels
+@model OrderDetailsAdminVM
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">🧾 Order Details - #@Model.Id</h2>
+        <a asp-action="GetAll" class="btn btn-secondary">⬅ Back to Orders</a>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Order Information</h4>
+            <dl class="row">
+                <dt class="col-sm-3">Customer</dt>
+                <dd class="col-sm-9">@Model.Customer?.Name</dd>
+
+                <dt class="col-sm-3">Order Status</dt>
+                <dd class="col-sm-9">
+                    <span class="badge bg-primary">@Model.OrderStatus</span>
+                </dd>
+
+                <dt class="col-sm-3">Placed By</dt>
+                <dd class="col-sm-9">@Model.PlacingOrder</dd>
+
+                <dt class="col-sm-3">Preparation Time</dt>
+                <dd class="col-sm-9">@Model.PreparationTimeMinutes minutes</dd>
+
+                <dt class="col-sm-3">Notes</dt>
+                <dd class="col-sm-9">@Model.Notes</dd>
+
+                @if (Model.TableNumber.HasValue)
+                {
+                    <dt class="col-sm-3">Table Number</dt>
+                    <dd class="col-sm-9">@Model.TableNumber</dd>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.DeliveryAddress))
+                {
+                    <dt class="col-sm-3">Delivery Address</dt>
+                    <dd class="col-sm-9">@Model.DeliveryAddress</dd>
+                }
+
+                <dt class="col-sm-3">Delivery Time</dt>
+                <dd class="col-sm-9">@Model.DeliveryTime minutes</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    @if (Model.OrderItems != null && Model.OrderItems.Any())
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h4 class="card-title mb-3">Items in Order</h4>
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(item.menuItem?.ImgUrl))
+                                        {
+                                            <img src="@item.menuItem.ImgUrl" alt="@item.menuItem.Name" width="50" height="50" class="rounded me-2" />
+                                        }
+                                        <span>@item.menuItem?.Name</span>
+                                    </div>
+                                </td>
+                                <td>@item.Quantity</td>
+                                <td>@item.menuItem?.Price.ToString("C")</td>
+                                <td>@((item.Quantity * (item.menuItem?.Price ?? 0)).ToString("C"))</td>
+                                <td>@item.Notes</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+    <!-- Payment Info -->
+    @if (Model.Payment != null)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h4 class="card-title mb-3">Payment Information</h4>
+                <dl class="row">
+                    <dt class="col-sm-3">Payment Method</dt>
+                    <dd class="col-sm-9">@Model.Payment.PaymentMethod</dd>
+
+                    <dt class="col-sm-3">Payment Status</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-success">@Model.Payment.PaymentStatus</span>
+                    </dd>
+
+                    <dt class="col-sm-3">Payment Date</dt>
+                    <dd class="col-sm-9">@Model.Payment.CreatedAt.ToString("dd MMM yyyy, hh:mm tt")</dd>
+                </dl>
+            </div>
+        </div>
+    }
+
+    <!-- Financial Summary -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Financial Summary</h4>
+            <table class="table table-borderless w-50">
+                <tbody>
+                    <tr>
+                        <td>Subtotal:</td>
+                        <td class="text-end">@Model.Subtotal.ToString("C")</td>
+                    </tr>
+                    <tr>
+                        <td>Tax:</td>
+                        <td class="text-end">@Model.Tax.ToString("C")</td>
+                    </tr>
+                    <tr>
+                        <td>Discounts:</td>
+                        <td class="text-end">-@Model.Discounts.ToString("C")</td>
+                    </tr>
+                    <tr>
+                        <td>Delivery Fee:</td>
+                        <td class="text-end">@Model.DeliveryFee.ToString("C")</td>
+                    </tr>
+                    <tr class="table-active fw-bold">
+                        <td>Total Amount:</td>
+                        <td class="text-end">@Model.TotalAmount.ToString("C")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
