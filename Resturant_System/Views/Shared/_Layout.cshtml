@@ -1,86 +1,150 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    // Razor helper to determine the current Controller/Action for active link logic
+    string currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+    string currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+
+    // Function to check if a link is active
+    string IsActive(string controller, string action)
+    {
+        bool isControllerMatch = currentController != null && controller.Equals(currentController, StringComparison.OrdinalIgnoreCase);
+        bool isActionMatch = currentAction != null && action.Equals(currentAction, StringComparison.OrdinalIgnoreCase);
+
+        // Match on both Controller and Action
+        if (isControllerMatch && isActionMatch) return "active";
+
+        // Optionally, highlight the controller section if we are on its default (Index) page
+        if (isControllerMatch && action.Equals("Index", StringComparison.OrdinalIgnoreCase)) return "active";
+
+        return "";
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Resturant_System</title>
+    <title>@ViewData["Title"] - Restaurant System</title>
+
+    <!-- Core Bootstrap -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Professional Typography: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Professional Icons: Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Custom Professional Styles -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Resturant_System.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Resturant_System</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <!-- The custom CSS in layout.css handles the sticky behavior, shadows, and background -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+                <!-- Brand: Stylized with icon and professional font weight -->
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-utensils brand-icon"></i> Restaurant System
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                        <!-- Navigation Links with Active State Logic -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-                <nav class="navbar">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a asp-controller="Order" asp-action="ViewCart" class="nav-link">
-                                🛒 Cart
+                            <a class="nav-link @IsActive("Home", "Index")" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i> Home
                             </a>
                         </li>
+                        <!-- Added a placeholder 'Menu' link, common for restaurant systems -->
+                        <li class="nav-item">
+                            <a class="nav-link @IsActive("Menu", "Index")" asp-area="" asp-controller="Menu" asp-action="Index">
+                                <i class="fas fa-book-open me-1"></i> Menu
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @IsActive("Home", "Privacy")" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-lock me-1"></i> Privacy
+                            </a>
+                        </li>
+
                     </ul>
-                </nav>
-                @using Microsoft.AspNetCore.Identity
-                @inject SignInManager<ApplicationUser> SignInManager
-                @inject UserManager<ApplicationUser> UserManager
 
-                <ul class="navbar-nav ms-auto">
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-
-                        <li class="nav-item">
-                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-link nav-link text-danger">
-                                    🚪 Logout (@UserManager.GetUserName(User))
-                                </button>
-                            </form>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Login">🔑 Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Register">📝 Register</a>
-                        </li>
-                    }
-                </ul>
-
-
+                    <!-- Authentication Links (Right Side) -->
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <!-- Logged In User Dropdown for cleaner space usage -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle me-1"></i> Hello, @UserManager.GetUserName(User)
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Customer" asp-action="Profile"><i class="fas fa-id-card me-2"></i>My Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Order" asp-action="MyOrders"><i class="fas fa-receipt me-2"></i>My Orders</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post">
+                                            <!-- Logout button styled as dropdown item -->
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Log In link -->
+                            <li class="nav-item me-2">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    <i class="fas fa-sign-in-alt me-1"></i> Login
+                                </a>
+                            </li>
+                            <!-- Register is now a visually distinct CTA button -->
+                            <li class="nav-item">
+                                <a class="btn btn-primary-cta" asp-controller="Account" asp-action="Register">
+                                    <i class="fas fa-user-plus me-1"></i> Register
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
-        <main role="main" class="pb-3">
+        <!-- Main content area uses the custom CSS padding -->
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <!-- Footer uses the custom .footer class for a cleaner look -->
+    <footer class="footer">
         <div class="container">
-            &copy; 2025 - Resturant_System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - Restaurant System -
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a> |
+            <a href="/Home/Terms">Terms of Service</a>
         </div>
     </footer>
+
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

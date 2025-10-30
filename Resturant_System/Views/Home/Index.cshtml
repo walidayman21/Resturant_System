@@ -1,165 +1,186 @@
-﻿
-
+﻿<!-- ==================== HOME PAGE (Index.cshtml) ==================== -->
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<!-- Hero Section -->
+<!-- Hero Section with Slideshow -->
 <section class="hero-section position-relative overflow-hidden">
-    <div class="hero-bg"></div>
-    <div class="container">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="container position-relative">
         <div class="row min-vh-100 align-items-center">
-            <div class="col-lg-6 text-white">
-                <h1 class="display-3 fw-bold mb-4 animate-slide-up">
-                    Welcome to Our Restaurant
+            <div class="col-lg-6 text-white hero-content">
+                <span class="badge bg-light text-dark mb-3 px-3 py-2 animate-bounce">
+                    <i class="bi bi-award-fill text-warning me-1"></i> Best Restaurant 2025
+                </span>
+                <h1 class="display-2 fw-bold mb-4 animate-slide-up">
+                    Taste the <span class="text-warning">Excellence</span>
                 </h1>
-                <p class="lead mb-4 animate-slide-up" style="animation-delay: 0.2s;">
-                    Experience the finest dining with delicious food, great ambiance, and exceptional service.
+                <p class="lead mb-4 animate-slide-up fs-4" style="animation-delay: 0.2s;">
+                    Experience culinary perfection with our handcrafted dishes, made from the finest ingredients and served with passion.
                 </p>
+
+                <div class="hero-stats d-flex gap-4 mb-4 animate-slide-up" style="animation-delay: 0.3s;">
+                    <div>
+                        <h3 class="fw-bold mb-0">500+</h3>
+                        <small>Happy Customers</small>
+                    </div>
+                    <div class="vr bg-light opacity-50"></div>
+                    <div>
+                        <h3 class="fw-bold mb-0">50+</h3>
+                        <small>Menu Items</small>
+                    </div>
+                    <div class="vr bg-light opacity-50"></div>
+                    <div>
+                        <h3 class="fw-bold mb-0">4.9★</h3>
+                        <small>Rating</small>
+                    </div>
+                </div>
+
                 <div class="d-flex gap-3 flex-wrap animate-slide-up" style="animation-delay: 0.4s;">
-                    <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-success btn-lg px-5 py-3">
-                        <i class="bi bi-grid-3x3-gap me-2"></i>Browse Menu
+                    <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-warning btn-lg px-5 py-3 fw-bold">
+                        <i class="bi bi-book-half me-2"></i>Explore Menu
                     </a>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg px-5 py-3">
-                        <i class="bi bi-person-plus me-2"></i>Sign Up
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg px-5 py-3 fw-bold">
+                        <i class="bi bi-person-plus me-2"></i>Join Now
                     </a>
                 </div>
             </div>
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="auth-card animate-fade-in">
-                    <div class="card shadow-lg border-0">
-                        <div class="card-body p-4">
-                            <h4 class="text-center mb-4 fw-bold">
-                                <i class="bi bi-box-arrow-in-right text-success me-2"></i>Quick Access
-                            </h4>
 
-                            <div class="d-grid gap-3">
-                                <a asp-controller="Account" asp-action="Login" class="btn btn-success btn-lg">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
-                                </a>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="auth-card animate-fade-in">
+                        <div class="card shadow-lg border-0">
+                            <div class="card-body p-5">
+                                <div class="text-center mb-4">
+                                    <div class="auth-icon mb-3">
+                                        <i class="bi bi-unlock-fill"></i>
+                                    </div>
+                                    <h3 class="fw-bold mb-2">Quick Access</h3>
+                                    <p class="text-muted">Start your culinary journey today</p>
+                                </div>
 
-                                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-success btn-lg">
-                                    <i class="bi bi-person-plus me-2"></i>Register
-                                </a>
+                                <div class="d-grid gap-3">
+                                    <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>Login to Account
+                                    </a>
 
-                                 <div class="text-center my-2">
-                                    <span class="text-muted">or</span>
-                                </div> 
+                                    <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary btn-lg">
+                                        <i class="bi bi-person-plus me-2"></i>Create Account
+                                    </a>
 
-                                 <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-light btn-lg border">
-                                    <i class="bi bi-eye me-2"></i>Browse as Guest
-                                </a> 
-                            </div>
+                                    <div class="divider">
+                                        <span>or</span>
+                                    </div>
 
-                            <div class="mt-4 text-center">
-                                <small class="text-muted">
-                                    <i class="bi bi-info-circle me-1"></i>
-                                    Login to enjoy exclusive benefits and track your orders
-                                </small>
+                                    <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-light btn-lg border">
+                                        <i class="bi bi-eye me-2"></i>Continue as Guest
+                                    </a>
+                                </div>
+
+                                <div class="mt-4 text-center">
+                                    <small class="text-muted">
+                                        <i class="bi bi-shield-check me-1"></i>
+                                        Secure login • Track orders • Exclusive offers
+                                    </small>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <i class="bi bi-chevron-down"></i>
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center fw-bold mb-5">Why Choose Us</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
-                    <div class="card-body">
-                        <div class="feature-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="bi bi-lightning-charge-fill text-success" style="font-size: 2rem;"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">Fast Delivery</h5>
-                        <p class="text-muted">Get your favorite meals delivered hot and fresh to your doorstep in no time.</p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
-                    <div class="card-body">
-                        <div class="feature-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="bi bi-star-fill text-success" style="font-size: 2rem;"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">Quality Food</h5>
-                        <p class="text-muted">We use only the finest ingredients to prepare delicious and healthy meals.</p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100 text-center p-4 hover-lift">
-                    <div class="card-body">
-                        <div class="feature-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                            <i class="bi bi-headset text-success" style="font-size: 2rem;"></i>
-                        </div>
-                        <h5 class="fw-bold mb-3">24/7 Support</h5>
-                        <p class="text-muted">Our customer service team is always ready to help you with any questions.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Popular Items Preview -->
+<!-- Popular Dishes -->
 <section class="py-5">
-    <div class="container">
+    <div class="container py-5">
         <div class="text-center mb-5">
-            <h2 class="fw-bold">Popular Dishes</h2>
-            <p class="text-muted">Discover our customer favorites</p>
+            <span class="badge bg-warning text-dark px-3 py-2 mb-3">
+                <i class="bi bi-fire me-1"></i> Trending Now
+            </span>
+            <h2 class="display-5 fw-bold mb-3">Popular Dishes</h2>
+            <p class="text-muted fs-5">Customer favorites that keep them coming back</p>
         </div>
+
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100 hover-lift">
-                    <div class="card-img-top bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="bi bi-egg-fried text-success" style="font-size: 4rem;"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="dish-card">
+                    <div class="dish-image">
+                        <img src="/images/website/res1.jpg" alt="Breakfast" />
+                        <div class="dish-badge">
+                            <span class="badge bg-warning">⭐ 4.9</span>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h5 class="fw-bold">Breakfast Specials</h5>
-                        <p class="text-muted">Start your day with our delicious breakfast options</p>
+                    <div class="dish-content">
+                        <span class="dish-category">Breakfast</span>
+                        <h5 class="fw-bold mb-2">Morning Specials</h5>
+                        <p class="text-muted mb-3">Start your day right with our signature breakfast platters</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-success fw-bold">From $5.99</span>
-                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-success">View Menu</a>
+                            <div>
+                                <span class="price">From $5.99</span>
+                            </div>
+                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-primary">
+                                Order Now <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100 hover-lift">
-                    <div class="card-img-top bg-warning bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="bi bi-cup-hot text-warning" style="font-size: 4rem;"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="dish-card">
+                    <div class="dish-image">
+                        <img src="/images/website/res2.jpg" alt="Main Course" />
+                        <div class="dish-badge">
+                            <span class="badge bg-danger">🔥 Hot</span>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h5 class="fw-bold">Hot Beverages</h5>
-                        <p class="text-muted">Enjoy our selection of coffee, tea, and more</p>
+                    <div class="dish-content">
+                        <span class="dish-category">Main Course</span>
+                        <h5 class="fw-bold mb-2">Chef's Selection</h5>
+                        <p class="text-muted mb-3">Handpicked dishes from our award-winning chef</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-success fw-bold">From $2.99</span>
-                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-success">View Menu</a>
+                            <div>
+                                <span class="price">From $12.99</span>
+                            </div>
+                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-primary">
+                                Order Now <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm h-100 hover-lift">
-                    <div class="card-img-top bg-danger bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="bi bi-fire text-danger" style="font-size: 4rem;"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="dish-card">
+                    <div class="dish-image">
+                        <img src="/images/website/res3.jpg" alt="Beverages" />
+                        <div class="dish-badge">
+                            <span class="badge bg-success">☕ Fresh</span>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h5 class="fw-bold">Main Courses</h5>
-                        <p class="text-muted">Savor our signature dishes and chef specials</p>
+                    <div class="dish-content">
+                        <span class="dish-category">Beverages</span>
+                        <h5 class="fw-bold mb-2">Hot & Cold Drinks</h5>
+                        <p class="text-muted mb-3">Premium coffee, tea, and refreshing beverages</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="text-success fw-bold">From $12.99</span>
-                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-success">View Menu</a>
+                            <div>
+                                <span class="price">From $2.99</span>
+                            </div>
+                            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-sm btn-primary">
+                                Order Now <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -168,42 +189,122 @@
     </div>
 </section>
 
-<!-- Call to Action for Mobile -->
-<section class="py-5 bg-success text-white d-lg-none">
-    <div class="container text-center">
-        <h3 class="fw-bold mb-4">Get Started Today!</h3>
-        <div class="d-grid gap-3">
-            <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Login
-            </a>
-            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-person-plus me-2"></i>Register
-            </a>
-            <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-dark btn-lg">
-                <i class="bi bi-eye me-2"></i>Browse as Guest
-            </a>
+<!-- CTA Section -->
+<section class="cta-section py-5">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <span class="badge bg-warning text-dark px-3 py-2 mb-3">
+                    <i class="bi bi-gift me-1"></i> Special Offer
+                </span>
+                <h2 class="display-4 fw-bold mb-4">Get 20% OFF on Your First Order!</h2>
+                <p class="lead mb-4">Join thousands of satisfied customers and experience the best dining experience. Register now to unlock exclusive offers.</p>
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Free delivery on orders over $25</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Exclusive member-only discounts</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Priority customer support</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Loyalty points on every purchase</li>
+                </ul>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-warning btn-lg px-5 py-3 fw-bold">
+                    <i class="bi bi-person-plus me-2"></i>Sign Up Now
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <div class="cta-image-wrapper">
+                    <img src="/images/website/res10.jpg" alt="Special Offer" class="img-fluid rounded-4 shadow-lg" />
+                    <div class="floating-badge">
+                        <div class="text-center">
+                            <h3 class="fw-bold mb-0">20%</h3>
+                            <small>OFF</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
+<!-- Mobile CTA -->
+@if (!User.Identity.IsAuthenticated)
+{
+    <section class="py-5 bg-gradient text-white d-lg-none">
+        <div class="container text-center">
+            <h3 class="fw-bold mb-4">Get Started Today!</h3>
+            <p class="lead mb-4">Join now and enjoy exclusive benefits</p>
+            <div class="d-grid gap-3">
+                <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                </a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-warning btn-lg">
+                    <i class="bi bi-person-plus me-2"></i>Register
+                </a>
+                <a asp-controller="GuestMenu" asp-action="Menu" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-eye me-2"></i>Browse Menu
+                </a>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script>
+        // Hero Background Slideshow
+        const images = [
+            '/images/website/res1.jpg',
+            '/images/website/res2.jpg',
+            '/images/website/res3.jpg',
+            '/images/website/res10.jpg'
+        ];
+
+        let current = 0;
+        const heroBg = document.getElementById('heroBg');
+
+        function changeBackground() {
+            current = (current + 1) % images.length;
+            heroBg.style.backgroundImage = `url('${images[current]}')`;
+        }
+
+        // Initialize
+        heroBg.style.backgroundImage = `url('${images[0]}')`;
+
+        // Change every 5 seconds
+        setInterval(changeBackground, 5000);
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .dish-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+}
 
 <style>
+    :root {
+        --primary: #0d6efd;
+        --warning: #ffc107;
+        --success: #198754;
+        --danger: #dc3545;
+    }
+
+    /* Hero Section */
     .hero-section {
         position: relative;
         min-height: 100vh;
         display: flex;
         align-items: center;
     }
-
-    /* .hero-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, #198754 0%, #146c43 100%);
-        z-index: -1;
-    } */
-
 
     .hero-bg {
         position: absolute;
@@ -213,118 +314,305 @@
         bottom: 0;
         background-size: cover;
         background-position: center;
-        background-repeat: no-repeat;
-        filter: brightness(0.5);
-        transition: background 1s ease-in-out;
+        transition: background-image 1.5s ease-in-out;
+        z-index: -2;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* background: linear-gradient(135deg, rgba(13, 110, 253, 0.9), rgba(255, 193, 7, 0.8)); */
         z-index: -1;
     }
 
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
 
-        .hero-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.3;
+    .hero-stats {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1.5rem;
+    }
+
+    .scroll-indicator {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: bounce 2s infinite;
+        color: white;
+        font-size: 2rem;
+    }
+
+    /* Animations */
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateX(-50%) translateY(0);
         }
 
+        40% {
+            transform: translateX(-50%) translateY(-20px);
+        }
+
+        60% {
+            transform: translateX(-50%) translateY(-10px);
+        }
+    }
+
     @@keyframes slideUp {
-        from
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
 
-    {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     @@keyframes fadeIn {
-        from
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
 
-    {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
     .animate-slide-up {
         animation: slideUp 0.8s ease-out forwards;
-        opacity: 0;
     }
 
     .animate-fade-in {
-        animation: fadeIn 1s ease-out forwards;
-        animation-delay: 0.6s;
+        animation: fadeIn 1s ease-out 0.6s forwards;
         opacity: 0;
     }
 
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+
+    /* Auth Card */
     .auth-card .card {
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(20px);
         background: rgba(255, 255, 255, 0.95);
+        border-radius: 25px;
+    }
+
+    .auth-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary), var(--warning));
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1rem 0;
+    }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+    /* Feature Cards */
+    .feature-card {
+        background: white;
         border-radius: 20px;
+        padding: 2rem;
+        height: 100%;
+        transition: all 0.4s ease;
+        border: 1px solid #f0f0f0;
+        opacity: 0;
+        transform: translateY(30px);
     }
 
-    .hover-lift {
-        transition: all 0.3s ease;
-    }
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        .hover-lift:hover {
+        .feature-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
     .feature-icon {
-        transition: all 0.3s ease;
+        width: 70px;
+        height: 70px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
     }
 
-    .hover-lift:hover .feature-icon {
+    .feature-card:hover .feature-icon {
         transform: scale(1.1) rotate(5deg);
     }
 
-    .btn {
+    .feature-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
         transition: all 0.3s ease;
-        border-radius: 10px;
     }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+        .feature-link:hover {
+            gap: 0.5rem;
         }
 
-    .card {
-        border-radius: 15px;
+    /* Dish Cards */
+    .dish-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+        .dish-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dish-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+    .dish-image {
+        position: relative;
+        height: 250px;
         overflow: hidden;
     }
+
+        .dish-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+    .dish-card:hover .dish-image img {
+        transform: scale(1.1);
+    }
+
+    .dish-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+
+    .dish-content {
+        padding: 1.5rem;
+    }
+
+    .dish-category {
+        display: inline-block;
+        background: #f8f9fa;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+
+    .price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .cta-image-wrapper {
+        position: relative;
+    }
+
+    .floating-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, var(--danger), var(--warning));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    .bg-gradient {
+        background: linear-gradient(135deg, var(--primary), var(--warning));
+    }
+
+    /* Responsive */
+    @@media (max-width: 991px) {
+        .hero-section {
+            min-height: auto;
+            padding: 4rem 0;
+        }
+
+        .display-2 {
+            font-size: 2.5rem;
+        }
+
+        .hero-stats {
+            flex-direction: column;
+            gap: 1rem !important;
+        }
+
+        .scroll-indicator {
+            display: none;
+        }
+    }
 </style>
-<script>
-    const images = [
-        '/images/website/res1.jpg',
-        '/images/website/res2.jpg',
-        '/images/website/res3.jpg',
-        '/images/website/res10.jpg'
-    ];
-
-    let current = 0;
-    const heroBg = document.querySelector('.hero-bg');
-
-    heroBg.style.backgroundImage = `url('${images[current]}')`;
-
-    setInterval(() => {
-        current = (current + 1) % images.length;
-        heroBg.style.backgroundImage = `url('${images[current]}')`;
-    }, 3000); 
-</script>
