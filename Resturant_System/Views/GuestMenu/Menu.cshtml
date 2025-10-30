@@ -1,80 +1,4 @@
-﻿@* @model IEnumerable<MenuItem>
-
-@{
-    ViewData["Title"] = "Menu";
-}
-
-<h1>Menu</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImgUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAvailable)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsSpicy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsHealthy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImgUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAvailable)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsSpicy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsHealthy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                <button>Quantity</button>
-                <a asp-action="Edit" asp-route-id="@item.Id">Order</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table> *@
-
+﻿
 @model IEnumerable<MenuItem>
 @{
     ViewData["Title"] = "Menu";
@@ -287,15 +211,6 @@
     </div>
 </div>
 
-<div class="top-actions">
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert-success flex-fill">
-            @TempData["SuccessMessage"]
-        </div>
-    }
-</div>
-
 <!-- Main Content -->
 <div class="container mb-5">
 
@@ -387,17 +302,25 @@
                                 }
                             </p>
 
+                            <!-- Quantity Info -->
+                            <p class="text-muted mb-2">
+                                <small>Available today: <strong>@item.AvailableQuantity</strong></small>
+                            </p>
+
                             <!-- Quantity Control -->
                             <div class="quantity-section">
                                 <div class="quantity-control">
                                     <button class="qty-btn" onclick="changeQuantity(this, -1)">-</button>
                                     <span class="qty-display">1</span>
-                                    <button class="qty-btn" onclick="changeQuantity(this, 1)">+</button>
+                                    <button class="qty-btn" onclick="changeQuantity(this, 1, @item.AvailableQuantity)">+</button>
                                 </div>
 
                                 @if (item.IsAvailable)
                                 {
-                                    <a asp-controller="Order" asp-action="AddToCart" asp-route-id="@item.Id" asp-route-quantity="1"
+                                    <a asp-controller="Order"
+                                       asp-action="AddToCart"
+                                       asp-route-id="@item.Id"
+                                       asp-route-quantity="1"
                                        class="btn btn-order order-btn flex-fill order-link">
                                         🛒 Add to cart
                                     </a>
@@ -412,6 +335,7 @@
                         </div>
                     </div>
                 </div>
+
             }
         </div>
     }
@@ -425,16 +349,14 @@
 </div>
 
 <script>
-    // Quantity Control
-    function changeQuantity(btn, change) {
+        function changeQuantity(btn, change, maxAvailable = 50) {
         const qtyDisplay = btn.parentElement.querySelector('.qty-display');
         let currentQty = parseInt(qtyDisplay.textContent);
         let newQty = currentQty + change;
 
-        if (newQty >= 1 && newQty <= 50) {
+        if (newQty >= 1 && newQty <= maxAvailable) {
             qtyDisplay.textContent = newQty;
 
-            // Update order link
             const card = btn.closest('.card-body');
             const orderLink = card.querySelector('.order-link');
             if (orderLink) {
@@ -442,8 +364,11 @@
                 url.searchParams.set('quantity', newQty);
                 orderLink.href = url.toString();
             }
+        } else if (newQty > maxAvailable) {
+            alert(`⚠️ Only ${maxAvailable} available today.`);
         }
     }
+
 
     // Filter Functionality
     document.querySelectorAll('.filter-btn').forEach(btn => {

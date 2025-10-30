@@ -4,6 +4,11 @@
     var activeItems = Model.OrderItems?.Where(oi => !oi.IsDeleted).ToList() ?? new List<OrderItem>();
 }
 
+@{
+    Layout = "_CustomerLayout";
+}
+
+
 <style>
     .cart-container {
         max-width: 1000px;

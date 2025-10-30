@@ -1,336 +1,538 @@
-﻿@* @model Order
+﻿@model Order
 @{
     ViewData["Title"] = "Checkout";
     var activeItems = Model.OrderItems.Where(oi => !oi.IsDeleted).ToList();
 }
 
+@{
+    Layout = "_CustomerLayout";
+}
+
+
 <style>
     .checkout-container {
-        max-width: 900px;
+        max-width: 1100px;
         margin: 40px auto;
+        padding: 0 15px;
+    }
+
+    .checkout-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+        .checkout-header h2 {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .checkout-header p {
+            color: #666;
+        }
+
+    .form-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        color: #e74c3c;
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e74c3c;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        padding: 12px 15px;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+        }
+
+    .summary-card {
+        background: linear-gradient(135deg, #e74c3c, #f39c12);
+        border-radius: 15px;
+        padding: 25px;
+        color: white;
+        position: sticky;
+        top: 20px;
+    }
+
+        .summary-card h5 {
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+    .summary-item {
+        background: rgba(255,255,255,0.15);
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .summary-divider {
+        border-top: 2px solid rgba(255,255,255,0.3);
+        margin: 15px 0;
+    }
+
+    .summary-total {
+        font-size: 1.5rem;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .customer-info-card {
+        background: #f8f9fa;
+        border-left: 4px solid #e74c3c;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+        .customer-info-card h6 {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+    .btn-confirm {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        border: none;
+        color: white;
+        padding: 15px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-radius: 10px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+    .btn-back {
+        background: white;
+        border: 2px solid #e74c3c;
+        color: #e74c3c;
+        padding: 15px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+
+        .btn-back:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+    .delivery-fee-note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+        color: #856404;
+    }
+
+    .required-star {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    @@media (max-width: 768px) {
+        .summary-card {
+            position: relative;
+            top: 0;
+            margin-top: 30px;
+        }
     }
 </style>
 
 <div class="container checkout-container">
-    <h2 class="text-center mb-4">📝 Complete Your Order</h2>
+    <!-- Header -->
+    <div class="checkout-header">
+        <h2>📝 Complete Your Order</h2>
+        <p>You're just one step away from enjoying your delicious meal!</p>
+    </div>
 
     <div class="row">
         <!-- Order Form -->
-        <div class="col-md-7">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h4 class="mb-4">👤 Customer Information</h4> *@
+        <div class="col-lg-7">
+            <div class="form-card">
+                <form asp-action="ConfirmOrder" method="post" id="checkoutForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="orderId" value="@Model.Id" />
 
-                    @* <form asp-action="ConfirmOrder" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="orderId" value="@Model.Id" />
-
-                        <div class="mb-3">
-                            <label class="form-label">Full Name *</label>
-                            <input type="text" name="customerName" class="form-control" required />
-                        </div>
+                    <!-- Order Type Section -->
+                    <div class="mb-4">
+                        <h5 class="section-title">🍽️ Order Type</h5>
 
                         <div class="mb-3">
-                            <label class="form-label">Phone Number *</label>
-                            <input type="tel" name="customerPhone" class="form-control"
-                                   placeholder="01XXXXXXXXX" pattern="[0-9]{11}" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Address (Optional)</label>
-                            <textarea name="address" class="form-control" rows="2"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Order Notes (Optional)</label>
-                            <textarea name="orderNotes" class="form-control" rows="2"
-                                      placeholder="Any special requests?"></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-danger btn-lg w-100 mt-3">
-                            🛒 Confirm Order
-                        </button>
-                    </form> *@
-
-@*                     <form asp-action="ConfirmOrder" method="post" id="checkoutForm">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="orderId" value="@Model.Id" />
-
-                        <!-- Order Type -->
-                        <div class="mb-3">
-                            <label class="form-label">Order Type *</label>
+                            <label class="form-label">
+                                Select Order Type <span class="required-star">*</span>
+                            </label>
                             <select name="orderType" id="orderType" class="form-select" required>
-                                <option value="">-- Select Order Type --</option>
+                                <option value="">-- Choose Order Type --</option>
                                 @foreach (var item in ViewBag.OrderTypes)
                                 {
-                                    <option value="@item.Value">@item.Text</option>
+                                    <option value="@item.Value">
+                                        @if (item.Text == "DinIn")
+                                        {
+                                            <text>🪑 Dine-In</text>
+                                        }
+                                        else if (item.Text == "Takeaway")
+                                        {
+
+                                            <text>🥡 Takeaway</text>
+                                        }
+                                        else if (item.Text == "Delivery")
+                                        {
+
+                                            <text>🚚 Delivery</text>
+                                        }
+                                        else
+                                        {
+
+                                            @item.Text
+                                        }
+                                    </option>
                                 }
                             </select>
                         </div>
 
                         <!-- Table Number (for Dine-In) -->
                         <div class="mb-3" id="tableNumberSection" style="display:none;">
-                            <label class="form-label">Table Number</label>
-                            <input type="number" name="tableNumber" class="form-control"
-                                   min="1" max="100" placeholder="Enter table number" />
+                            <label class="form-label">
+                                <i class="bi bi-table"></i> Table Number
+                            </label>
+                            <input type="number" name="tableNumber" id="tableNumber" class="form-control"
+                                   min="1" max="100" placeholder="Enter your table number" />
+                            <small class="text-muted">Please provide your table number for dine-in service</small>
                         </div>
 
                         <!-- Delivery Address (for Delivery) -->
                         <div class="mb-3" id="deliveryAddressSection" style="display:none;">
-                            <label class="form-label">Delivery Address *</label>
-                            <textarea name="deliveryAddress" class="form-control" rows="3"
-                                      placeholder="Enter your full delivery address"></textarea>
-                            <small class="text-muted">Delivery Fee: 30 EGP</small>
+                            <label class="form-label">
+                                <i class="bi bi-geo-alt-fill"></i> Delivery Address <span class="required-star">*</span>
+                            </label>
+                            <textarea name="deliveryAddress" id="deliveryAddress" class="form-control" rows="3"
+                                      placeholder="Enter your complete delivery address (Building, Street, Area, City)"></textarea>
+                            <div class="delivery-fee-note">
+                                <i class="bi bi-info-circle"></i> Delivery Fee: <strong>30.00 EGP</strong>
+                            </div>
                         </div>
+                    </div>
 
-                        <!-- Payment Method -->
+                    <!-- Payment Section -->
+                    <div class="mb-4">
+                        <h5 class="section-title">💳 Payment Method</h5>
+
                         <div class="mb-3">
-                            <label class="form-label">Payment Method *</label>
+                            <label class="form-label">
+                                Select Payment Method <span class="required-star">*</span>
+                            </label>
                             <select name="paymentMethod" class="form-select" required>
-                                <option value="">-- Select Payment Method --</option>
+                                <option value="">-- Choose Payment Method --</option>
                                 @foreach (var item in ViewBag.PaymentMethods)
                                 {
-                                    <option value="@item.Value">@item.Text</option>
+                                    <option value="@item.Value">
+                                        @if (item.Text == "Cash")
+                                        {
+                                            <text>💵 Cash</text>
+                                        }
+                                        else if (item.Text == "Card")
+                                        {
+
+                                            <text>💳 Credit/Debit Card</text>
+                                        }
+                                        else if (item.Text == "Online")
+                                        {
+
+                                            <text>📱 Online Payment</text>
+                                        }
+                                        else
+                                        {
+
+                                            @item.Text
+                                        }
+                                    </option>
                                 }
                             </select>
                         </div>
-
-                        <!-- Order Notes -->
-                        <div class="mb-3">
-                            <label class="form-label">Order Notes (Optional)</label>
-                            <textarea name="orderNotes" class="form-control" rows="2"
-                                      placeholder="Any special requests?"></textarea>
-                        </div>
-
-                        <!-- Customer Info (Read-only) -->
-                        <div class="alert alert-info">
-                            <h6>👤 Customer Information:</h6>
-                            <p class="mb-0"><strong>Name:</strong> @Model.Customer.Name</p>
-                            <p class="mb-0"><strong>Phone:</strong> @Model.Customer.PhoneNumber</p>
-                        </div>
-
-                        <button type="submit" class="btn btn-danger btn-lg w-100 mt-3">
-                            🛒 Confirm Order
-                        </button>
-                    </form>
                     </div>
+
+                    <!-- Order Notes Section -->
+                    <div class="mb-4">
+                        <h5 class="section-title">📝 Additional Notes</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="bi bi-pencil-square"></i> Special Instructions (Optional)
+                            </label>
+                            <textarea name="orderNotes" class="form-control" rows="3"
+                                      placeholder="Any special requests? (e.g., extra napkins, contactless delivery, etc.)"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Customer Info Section -->
+                    <div class="mb-4">
+                        <h5 class="section-title">👤 Customer Information</h5>
+
+                        <div class="customer-info-card">
+                            <h6>Order will be placed under:</h6>
+                            <p class="mb-1">
+                                <i class="bi bi-person-fill"></i>
+                                <strong>Name:</strong> @Model.Customer.Name
+                            </p>
+                            <p class="mb-1">
+                                <i class="bi bi-telephone-fill"></i>
+                                <strong>Phone:</strong> @Model.Customer.PhoneNumber
+                            </p>
+                            @if (!string.IsNullOrEmpty(Model.Customer.Address))
+                            {
+                                <p class="mb-0">
+                                    <i class="bi bi-house-fill"></i>
+                                    <strong>Address:</strong> @Model.Customer.Address
+                                </p>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-confirm">
+                            <i class="bi bi-check-circle-fill"></i> Confirm Order
+                        </button>
+                        <a asp-action="ViewCart" class="btn btn-back">
+                            <i class="bi bi-arrow-left"></i> Back to Cart
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
 
         <!-- Order Summary -->
-        <div class="col-md-5">
-            <div class="card shadow-sm">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">📋 Order Summary</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Items List -->
+        <div class="col-lg-5">
+            <div class="summary-card">
+                <h5>
+                    <i class="bi bi-receipt"></i> Order Summary
+                </h5>
+
+                <!-- Items List -->
+                <div class="mb-3">
                     @foreach (var item in activeItems)
                     {
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>@item.MenuItem.Name x @item.Quantity</span>
-                            <strong>@item.Subtotal.ToString("C")</strong>
+                        <div class="summary-item">
+                            <div class="d-flex align-items-center flex-grow-1">
+                                @if (!string.IsNullOrEmpty(item.MenuItem.ImgUrl))
+                                {
+                                    <img src="@item.MenuItem.ImgUrl" alt="@item.MenuItem.Name"
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 10px;" />
+                                }
+                                else
+                                {
+                                    <div style="width: 50px; height: 50px; background: rgba(255,255,255,0.3); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                        <i class="bi bi-image" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                }
+                                <div>
+                                    <div><strong>@item.MenuItem.Name</strong></div>
+                                    <small>Qty: @item.Quantity × @item.UnitPrice.ToString("C")</small>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <strong>@item.Subtotal.ToString("C")</strong>
+                            </div>
                         </div>
                     }
+                </div>
 
-                    <hr />
+                <div class="summary-divider"></div>
 
-                    <!-- Totals -->
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal:</span>
-                        <strong>@Model.Subtotal.ToString("C")</strong>
+                <!-- Price Breakdown -->
+                <div class="mb-2 d-flex justify-content-between">
+                    <span>Subtotal:</span>
+                    <strong id="subtotalDisplay">@Model.Subtotal.ToString("C")</strong>
+                </div>
+
+                @if (Model.Discounts > 0)
+                {
+                    <div class="mb-2 d-flex justify-content-between" style="color: #2ecc71;">
+                        <span><i class="bi bi-tag-fill"></i> Discount:</span>
+                        <strong>- @Model.Discounts.ToString("C")</strong>
                     </div>
-                    @if (Model.Discounts > 0)
+                }
+
+                <div class="mb-2 d-flex justify-content-between">
+                    <span>Tax (8.5%):</span>
+                    <strong id="taxDisplay">@Model.Tax.ToString("C")</strong>
+                </div>
+
+                <div class="mb-2 d-flex justify-content-between" id="deliveryFeeRow" style="display:none!important;">
+                    <span><i class="bi bi-truck"></i> Delivery Fee:</span>
+                    <strong id="deliveryFeeDisplay">30.00 EGP</strong>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <!-- Total -->
+                <div class="summary-total">
+                    <span>Total:</span>
+                    <span id="totalAmount">@Model.TotalAmount.ToString("C")</span>
+                </div>
+
+                <!-- Discount Info -->
+                @{
+                    var currentHour = DateTime.Now.Hour;
+                    var isHappyHour = currentHour >= 15 && currentHour < 17;
+                }
+
+                <div class="mt-3">
+                    @if (isHappyHour)
                     {
-                        <div class="d-flex justify-content-between mb-2 text-success">
-                            <span>Discount:</span>
-                            <strong>- @Model.Discounts.ToString("C")</strong>
+                        <div style="background: #2ecc71; color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; display: inline-block; margin-bottom: 5px;">
+                            <i class="bi bi-emoji-smile"></i> Happy Hour Active! 20% OFF
                         </div>
                     }
-                    <div class="d-flex justify-content-between mb-2 text-muted">
-                        <span>Tax (8.5%):</span>
-                        <span>@Model.Tax.ToString("C")</span>
-                    </div>
-                    <hr />
-                    <div class="d-flex justify-content-between">
-                        <h5>Total:</h5>
-                        <h5 class="text-danger">@Model.TotalAmount.ToString("C")</h5>
-                    </div>
+                    @if (Model.Subtotal > 100)
+                    {
+                        <div style="background: #2ecc71; color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; display: inline-block;">
+                            <i class="bi bi-gift"></i> Bulk Discount Applied! 10% OFF
+                        </div>
+                    }
+                    @if (!isHappyHour && Model.Subtotal <= 100)
+                    {
+                        <small style="opacity: 0.8; display: block; margin-top: 10px;">
+                            <i class="bi bi-info-circle"></i> Happy Hour: 3-5 PM (20% OFF)<br>
+                            <i class="bi bi-info-circle"></i> Orders over 100 EGP: 10% OFF
+                        </small>
+                    }
+                </div>
+
+                <!-- Items Count -->
+                <div class="text-center mt-3" style="opacity: 0.8;">
+                    <i class="bi bi-bag-check-fill"></i>
+                    @activeItems.Count item(s) •
+                    @activeItems.Sum(i => i.Quantity) total quantity
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+@section Scripts {
     <script>
-        // Show/Hide sections based on order type
-        document.getElementById('orderType').addEventListener('change', function() {
+        // Store original values
+        const subtotal = @Model.Subtotal;
+        const discount = @Model.Discounts;
+        const tax = @Model.Tax;
+
+        // Show/Hide sections and update total based on order type
+        document.getElementById('orderType').addEventListener('change', function () {
             const orderType = parseInt(this.value);
             const tableSection = document.getElementById('tableNumberSection');
             const deliverySection = document.getElementById('deliveryAddressSection');
+            const tableInput = document.getElementById('tableNumber');
+            const addressInput = document.getElementById('deliveryAddress');
+            const deliveryFeeRow = document.getElementById('deliveryFeeRow');
 
             // Hide all first
             tableSection.style.display = 'none';
             deliverySection.style.display = 'none';
+            deliveryFeeRow.style.display = 'none';
+
+            // Remove required attributes
+            tableInput.removeAttribute('required');
+            addressInput.removeAttribute('required');
 
             // Show based on selection
-            // 0 = DineIn, 1 = Takeaway, 2 = Delivery
-            if (orderType === 0) {
+            // Assuming enum values: DinIn=1, Takeaway=2, Delivery=3
+            if (orderType === 1) {
+                // Dine-In
                 tableSection.style.display = 'block';
+                updateTotal(0); // No delivery fee
             } else if (orderType === 2) {
+                // Takeaway
+                updateTotal(0); // No delivery fee
+            } else if (orderType === 3) {
+                // Delivery
                 deliverySection.style.display = 'block';
+                deliveryFeeRow.style.display = 'flex';
+                addressInput.setAttribute('required', 'required');
+                updateTotal(30); // Add delivery fee
             }
         });
-    </script> *@
 
-
-@model Order
-@{
-    ViewData["Title"] = "Checkout";
-    var activeItems = Model.OrderItems.Where(oi => !oi.IsDeleted).ToList();
-}
-
-<style>
-    .checkout-container {
-        max-width: 900px;
-        margin: 40px auto;
-    }
-</style>
-
-<div class="container checkout-container">
-    <h2 class="text-center mb-4">📝 Complete Your Order</h2>
-
-    <div class="row">
-        <!-- Order Form -->
-        <div class="col-md-7">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h4 class="mb-4">👤 Customer Information</h4>
-
-                    <form asp-action="ConfirmOrder" method="post" id="checkoutForm">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="orderId" value="@Model.Id" />
-
-                        <!-- Order Type -->
-                        <div class="mb-3">
-                            <label class="form-label">Order Type *</label>
-                            <select name="orderType" id="orderType" class="form-select" required>
-                                <option value="">-- Select Order Type --</option>
-                                @foreach (var item in ViewBag.OrderTypes)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
-
-                        <!-- Table Number (for Dine-In) -->
-                        <div class="mb-3" id="tableNumberSection" style="display:none;">
-                            <label class="form-label">Table Number</label>
-                            <input type="number" name="tableNumber" class="form-control"
-                                   min="1" max="100" placeholder="Enter table number" />
-                        </div>
-
-                        <!-- Delivery Address (for Delivery) -->
-                        <div class="mb-3" id="deliveryAddressSection" style="display:none;">
-                            <label class="form-label">Delivery Address *</label>
-                            <textarea name="deliveryAddress" class="form-control" rows="3"
-                                      placeholder="Enter your full delivery address" required></textarea>
-                            <small class="text-muted">Delivery Fee: 30 EGP</small>
-                        </div>
-
-                        <!-- Payment Method -->
-                        <div class="mb-3">
-                            <label class="form-label">Payment Method *</label>
-                            <select name="paymentMethod" class="form-select" required>
-                                <option value="">-- Select Payment Method --</option>
-                                @foreach (var item in ViewBag.PaymentMethods)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                        </div>
-
-                        <!-- Order Notes -->
-                        <div class="mb-3">
-                            <label class="form-label">Order Notes (Optional)</label>
-                            <textarea name="orderNotes" class="form-control" rows="2"
-                                      placeholder="Any special requests?"></textarea>
-                        </div>
-
-                        <!-- Customer Info (Read-only) -->
-                        <div class="alert alert-info">
-                            <h6>👤 Customer Information:</h6>
-                            <p class="mb-0"><strong>Name:</strong> @Model.Customer.Name</p>
-                            <p class="mb-0"><strong>Phone:</strong> @Model.Customer.PhoneNumber</p>
-                        </div>
-
-                        <button type="submit" class="btn btn-danger btn-lg w-100 mt-3">
-                            🛒 Confirm Order
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Order Summary -->
-        <div class="col-md-5">
-            <div class="card shadow-sm">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">📋 Order Summary</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Items List -->
-                    @foreach (var item in activeItems)
-                    {
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>@item.MenuItem.Name x @item.Quantity</span>
-                            <strong>@item.Subtotal.ToString("C")</strong>
-                        </div>
-                    }
-
-                    <hr />
-
-                    <!-- Totals -->
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal:</span>
-                        <strong>@Model.Subtotal.ToString("C")</strong>
-                    </div>
-                    @if (Model.Discounts > 0)
-                    {
-                        <div class="d-flex justify-content-between mb-2 text-success">
-                            <span>Discount:</span>
-                            <strong>- @Model.Discounts.ToString("C")</strong>
-                        </div>
-                    }
-                    <div class="d-flex justify-content-between mb-2 text-muted">
-                        <span>Tax (8.5%):</span>
-                        <span>@Model.Tax.ToString("C")</span>
-                    </div>
-                    <hr />
-                    <div class="d-flex justify-content-between">
-                        <h5>Total:</h5>
-                        <h5 class="text-danger">@Model.TotalAmount.ToString("C")</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    document.getElementById('orderType').addEventListener('change', function () {
-        const orderType = parseInt(this.value);
-        const tableSection = document.getElementById('tableNumberSection');
-        const deliverySection = document.getElementById('deliveryAddressSection');
-
-        tableSection.style.display = 'none';
-        deliverySection.style.display = 'none';
-
-        // 1 = DineIn, 2 = Takeout, 3 = Delivery
-        if (orderType === 1) {
-            tableSection.style.display = 'block';
-        } else if (orderType === 3) {
-            deliverySection.style.display = 'block';
+        // Update total amount
+        function updateTotal(deliveryFee) {
+            const total = subtotal - discount + tax + deliveryFee;
+            document.getElementById('totalAmount').textContent = total.toFixed(2) + ' EGP';
         }
-    });
-</script>
+
+        // Form validation
+        document.getElementById('checkoutForm').addEventListener('submit', function (e) {
+            const orderType = parseInt(document.getElementById('orderType').value);
+
+            if (!orderType) {
+                e.preventDefault();
+                alert('Please select an order type!');
+                document.getElementById('orderType').focus();
+                return false;
+            }
+
+            // Check delivery address if delivery is selected
+            if (orderType === 3) {
+                const deliveryAddress = document.getElementById('deliveryAddress').value.trim();
+                if (!deliveryAddress) {
+                    e.preventDefault();
+                    alert('Please enter your delivery address!');
+                    document.getElementById('deliveryAddress').focus();
+                    return false;
+                }
+            }
+
+            // Check table number if dine-in is selected
+            if (orderType === 1) {
+                const tableNumber = document.getElementById('tableNumber').value;
+                if (!tableNumber) {
+                    e.preventDefault();
+                    alert('Please enter your table number!');
+                    document.getElementById('tableNumber').focus();
+                    return false;
+                }
+            }
+        });
+
+        // Auto-focus on first input
+        window.addEventListener('load', function () {
+            document.getElementById('orderType').focus();
+        });
+    </script>
+}

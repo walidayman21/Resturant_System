@@ -27,14 +27,42 @@ namespace Resturant_System.Controllers
         [HttpGet]
         public async Task<IActionResult> AddToCart(int id, int quantity = 1)
         {
-            var menuItem = await db.MenuItems
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var menuItem = await db.MenuItems.FirstOrDefaultAsync(m => m.Id == id);
 
-            if (menuItem == null || !menuItem.IsAvailable)
+            if (menuItem == null)
             {
-                TempData["ErrorMessage"] = "Item not available!";
+                TempData["ErrorMessage"] = "Item not found!";
                 return RedirectToAction("Menu", "GuestMenu");
             }
+
+            if (menuItem.LastUpdated.Date < DateTime.Today)
+            {
+                menuItem.AvailableQuantity = menuItem.DailyLimit;
+                menuItem.IsAvailable = true;
+                menuItem.LastUpdated = DateTime.Today;
+                await db.SaveChangesAsync();
+            }
+
+            if (!menuItem.IsAvailable || menuItem.AvailableQuantity <= 0)
+            {
+                TempData["ErrorMessage"] = $"{menuItem.Name} is sold out for today!";
+                return RedirectToAction("Menu", "GuestMenu");
+            }
+
+            if (menuItem.AvailableQuantity < quantity)
+            {
+                TempData["ErrorMessage"] = $"Only {menuItem.AvailableQuantity} left for today!";
+                return RedirectToAction("Menu", "GuestMenu");
+            }
+
+            menuItem.AvailableQuantity -= quantity;
+
+            if (menuItem.AvailableQuantity == 0)
+            {
+                menuItem.IsAvailable = false;
+            }
+
+            await db.SaveChangesAsync();
 
             var currentOrderId = SessionHelper.GetCurrentOrderId(HttpContext.Session);
             Order order;
@@ -46,9 +74,7 @@ namespace Resturant_System.Controllers
                     .FirstOrDefaultAsync(o => o.Id == currentOrderId.Value && o.OrderStatus == OrderStatus.Draft);
 
                 if (order == null)
-                {
                     order = await CreateDraftOrder();
-                }
             }
             else
             {
@@ -64,7 +90,6 @@ namespace Resturant_System.Controllers
                 existingOrderItem.Subtotal = existingOrderItem.UnitPrice * existingOrderItem.Quantity;
                 existingOrderItem.UpdatedAt = DateTime.Now;
             }
-
             else
             {
                 var orderItem = new OrderItem
@@ -84,6 +109,23 @@ namespace Resturant_System.Controllers
 
             TempData["SuccessMessage"] = $"✅ {menuItem.Name} added to cart!";
             return RedirectToAction("Menu", "GuestMenu");
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCartCount()
+        {
+            int count = 0;
+
+            var orderId = HttpContext.Session.GetInt32("CurrentOrderId");
+            if (orderId.HasValue)
+            {
+                count = await db.OrderItems
+                    .Where(oi => oi.OrderId == orderId.Value && !oi.IsDeleted)
+                    .SumAsync(oi => oi.Quantity);
+            }
+
+            return Json(new { count });
         }
 
         [HttpGet]
@@ -144,23 +186,6 @@ namespace Resturant_System.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> UpdateNotes(int orderItemId, string? notes)
-        //{
-        //    var orderItem = await db.OrderItems
-        //        .FirstOrDefaultAsync(oi => oi.Id == orderItemId && !oi.IsDeleted);
-
-        //    if (orderItem != null)
-        //    {
-        //        orderItem.Notes = notes;
-        //        orderItem.UpdatedAt = DateTime.Now;
-        //        await db.SaveChangesAsync();
-        //        TempData["SuccessMessage"] = "Notes updated";
-        //    }
-
-        //    return RedirectToAction("ViewCart");
-        //}
-
         [HttpPost]
         public async Task<IActionResult> RemoveItem(int orderItemId)
         {
@@ -170,8 +195,17 @@ namespace Resturant_System.Controllers
 
             if (orderItem != null)
             {
+                var menuItem = orderItem.MenuItem;
+                menuItem.AvailableQuantity += orderItem.Quantity;
+
+                if (menuItem.AvailableQuantity > 0)
+                {
+                    menuItem.IsAvailable = true;
+                }
+
                 orderItem.IsDeleted = true;
                 orderItem.UpdatedAt = DateTime.Now;
+
                 await db.SaveChangesAsync();
                 await UpdateOrderTotals(orderItem.OrderId);
 
@@ -180,31 +214,6 @@ namespace Resturant_System.Controllers
 
             return RedirectToAction("ViewCart");
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> Checkout()
-        //{
-        //    var currentOrderId = SessionHelper.GetCurrentOrderId(HttpContext.Session);
-
-        //    if (!currentOrderId.HasValue)
-        //    {
-        //        TempData["ErrorMessage"] = "Your cart is empty!";
-        //        return RedirectToAction("Menu", "GuestMenu");
-        //    }
-
-        //    var order = await db.Orders
-        //        .Include(o => o.OrderItems)
-        //            .ThenInclude(oi => oi.MenuItem)
-        //        .FirstOrDefaultAsync(o => o.Id == currentOrderId.Value && o.OrderStatus == OrderStatus.Draft);
-
-        //    if (order == null)
-        //    {
-        //        TempData["ErrorMessage"] = "Your cart is empty!";
-        //        return RedirectToAction("Menu", "GuestMenu");
-        //    }
-
-        //    return View(order);
-        //}
 
         [HttpGet]
         public async Task<IActionResult> Checkout()
@@ -327,24 +336,6 @@ namespace Resturant_System.Controllers
             TempData["SuccessMessage"] = $"Order #{order.Id} placed successfully!";
             return RedirectToAction("OrderSuccess", new { id = order.Id });
         }
-
-
-        //private async Task<Order> CreateDraftOrder()
-        //{
-        //    var order = new Order
-        //    {
-        //        CustomerId = 1,
-        //        OrderStatus = OrderStatus.Draft,
-        //        PlacingOrder = OrderType.DinIn,
-        //        CreatedAt = DateTime.Now
-        //    };
-
-        //    db.Orders.Add(order);
-        //    await db.SaveChangesAsync();
-
-        //    SessionHelper.SetCurrentOrderId(HttpContext.Session, order.Id);
-        //    return order;
-        //}
 
         private async Task<Order> CreateDraftOrder()
         {
@@ -470,19 +461,6 @@ namespace Resturant_System.Controllers
 
             return View(vm);
         }
-
-
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    var orders = await db.Orders.Include(m => m.Customer).ToListAsync();
-        //    return View(orders);
-        //}
-        //public async Task<IActionResult> GetById(int id)
-        //{
-        //    var order = await db.Orders.Include(m => m.Customer).Include(o => o.OrderItems).Include(o => o.Payment).FirstOrDefaultAsync(x => x.Id == id);
-        //    return View(order);
-        //}
-
 
     }
 }

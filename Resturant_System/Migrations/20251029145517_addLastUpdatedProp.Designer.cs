@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Resturant_System.Context;
 
@@ -11,9 +12,11 @@ using Resturant_System.Context;
 namespace Resturant_System.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    partial class RestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251029145517_addLastUpdatedProp")]
+    partial class addLastUpdatedProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -400,17 +403,11 @@ namespace Resturant_System.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AvailableQuantity")
-                        .HasColumnType("int");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("DailyLimit")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
@@ -456,272 +453,240 @@ namespace Resturant_System.Migrations
                         new
                         {
                             Id = 1,
-                            AvailableQuantity = 50,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Crispy chicken wings with buffalo sauce",
                             ImgUrl = "/images/chicken-wings.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = true,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6666),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4880),
                             Name = "Chicken Wings",
                             Price = 85.00m
                         },
                         new
                         {
                             Id = 2,
-                            AvailableQuantity = 50,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Deep fried mozzarella with marinara sauce",
                             ImgUrl = "/images/mozzarella-sticks.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6723),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4933),
                             Name = "Mozzarella Sticks",
                             Price = 65.00m
                         },
                         new
                         {
                             Id = 3,
-                            AvailableQuantity = 50,
                             CategoryId = 1,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Vegetable spring rolls with sweet chili sauce",
                             ImgUrl = "/images/spring-rolls.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = true,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6727),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4937),
                             Name = "Spring Rolls",
                             Price = 55.00m
                         },
                         new
                         {
                             Id = 4,
-                            AvailableQuantity = 50,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Classic pizza with tomato, mozzarella and basil",
                             ImgUrl = "/images/margherita-pizza.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6730),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4941),
                             Name = "Margherita Pizza",
                             Price = 120.00m
                         },
                         new
                         {
                             Id = 5,
-                            AvailableQuantity = 50,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Juicy beef patty with lettuce, tomato and cheese",
                             ImgUrl = "/images/beef-burger.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6734),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4943),
                             Name = "Beef Burger",
                             Price = 95.00m
                         },
                         new
                         {
                             Id = 6,
-                            AvailableQuantity = 50,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Marinated grilled chicken breast with vegetables",
                             ImgUrl = "/images/grilled-chicken.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = true,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6737),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4947),
                             Name = "Grilled Chicken",
                             Price = 110.00m
                         },
                         new
                         {
                             Id = 7,
-                            AvailableQuantity = 50,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Creamy pasta with bacon and parmesan",
                             ImgUrl = "/images/pasta-carbonara.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6740),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4950),
                             Name = "Pasta Carbonara",
                             Price = 105.00m
                         },
                         new
                         {
                             Id = 8,
-                            AvailableQuantity = 50,
                             CategoryId = 2,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Red curry with chicken and vegetables",
                             ImgUrl = "/images/thai-curry.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = true,
                             IsSpicy = true,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6743),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4953),
                             Name = "Spicy Thai Curry",
                             Price = 115.00m
                         },
                         new
                         {
                             Id = 9,
-                            AvailableQuantity = 50,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Warm chocolate cake with molten center",
                             ImgUrl = "/images/lava-cake.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6746),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4956),
                             Name = "Chocolate Lava Cake",
                             Price = 60.00m
                         },
                         new
                         {
                             Id = 10,
-                            AvailableQuantity = 50,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Classic Italian dessert with coffee and mascarpone",
                             ImgUrl = "/images/tiramisu.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6748),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4959),
                             Name = "Tiramisu",
                             Price = 70.00m
                         },
                         new
                         {
                             Id = 11,
-                            AvailableQuantity = 50,
                             CategoryId = 3,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "New York style cheesecake with berry compote",
                             ImgUrl = "/images/cheesecake.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6751),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4961),
                             Name = "Cheesecake",
                             Price = 65.00m
                         },
                         new
                         {
                             Id = 12,
-                            AvailableQuantity = 50,
                             CategoryId = 4,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Freshly squeezed orange juice",
                             ImgUrl = "/images/orange-juice.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = true,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6754),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4964),
                             Name = "Fresh Orange Juice",
                             Price = 25.00m
                         },
                         new
                         {
                             Id = 13,
-                            AvailableQuantity = 50,
                             CategoryId = 4,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Coca Cola, Sprite, or Fanta",
                             ImgUrl = "/images/soft-drink.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6757),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4967),
                             Name = "Soft Drink",
                             Price = 15.00m
                         },
                         new
                         {
                             Id = 14,
-                            AvailableQuantity = 50,
                             CategoryId = 4,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Cold brew coffee with milk",
                             ImgUrl = "/images/iced-coffee.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = false,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6760),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4970),
                             Name = "Iced Coffee",
                             Price = 35.00m
                         },
                         new
                         {
                             Id = 15,
-                            AvailableQuantity = 50,
                             CategoryId = 5,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Romaine lettuce with parmesan and croutons",
                             ImgUrl = "/images/caesar-salad.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = true,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6762),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4972),
                             Name = "Caesar Salad",
                             Price = 50.00m
                         },
                         new
                         {
                             Id = 16,
-                            AvailableQuantity = 50,
                             CategoryId = 5,
                             CreatedAt = new DateTime(2025, 10, 14, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyLimit = 50,
                             Description = "Tomatoes, cucumber, olives and feta cheese",
                             ImgUrl = "/images/greek-salad.jpg",
                             IsAvailable = true,
                             IsDeleted = false,
                             IsHealthy = true,
                             IsSpicy = false,
-                            LastUpdated = new DateTime(2025, 10, 29, 18, 17, 46, 437, DateTimeKind.Local).AddTicks(6766),
+                            LastUpdated = new DateTime(2025, 10, 29, 17, 55, 13, 132, DateTimeKind.Local).AddTicks(4975),
                             Name = "Greek Salad",
                             Price = 55.00m
                         });

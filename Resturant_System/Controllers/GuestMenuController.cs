@@ -17,6 +17,23 @@ namespace Resturant_System.Controllers
         }
         public async Task<IActionResult> Menu()
         {
+            var today = DateTime.Today;
+            var itemsToReset = await db.MenuItems
+                .Where(m => m.LastUpdated.Date < today && !m.IsDeleted)
+                .ToListAsync();
+
+            foreach (var item in itemsToReset)
+            {
+                item.AvailableQuantity = item.DailyLimit;
+                item.IsAvailable = true;
+                item.LastUpdated = today;
+            }
+
+            if (itemsToReset.Any())
+            {
+                await db.SaveChangesAsync();
+            }
+
             try
             {
                 List<MenuItem> menuItems = await db.MenuItems.Include(p => p.Category).ToListAsync();

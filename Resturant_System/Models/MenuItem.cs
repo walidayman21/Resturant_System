@@ -21,7 +21,6 @@ namespace Resturant_System.Models
         [StringLength(200)]
         public string? ImgUrl { get; set; }
         public bool IsAvailable { get; set; } = true;
-        //public int Quantity { get; set; } = 50;
         public bool IsSpicy { get; set; } = false;
         public bool IsHealthy { get; set; } = false;
 
@@ -31,5 +30,8 @@ namespace Resturant_System.Models
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }
         public ICollection<OrderItem>? OrderItems { get; set; }
+        public DateTime LastUpdated { get; set; } = DateTime.Now;
+        public int DailyLimit { get; set; } = 50; 
+        public int AvailableQuantity { get; set; } = 50; 
     }
 }
